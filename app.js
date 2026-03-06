@@ -1,3 +1,10 @@
+const createArray = (arr) => {
+  const sapnElement = arr.map(
+    (el) => `<span class="syno btn gap-1">${el}</span>`,
+  )
+  return sapnElement.join('')
+}
+
 const loadLessons = () => {
   fetch('https://openapi.programming-hero.com/api/levels/all')
     .then((response) => response.json())
@@ -6,6 +13,7 @@ const loadLessons = () => {
 loadLessons()
 
 const loadLevelWord = (id) => {
+  managesping(true)
   const url = `https://openapi.programming-hero.com/api/level/${id}`
   fetch(url)
     .then((res) => res.json())
@@ -21,7 +29,47 @@ const removeActive = () => {
   const lessonButton = document.querySelectorAll('.lesson-btn')
   lessonButton.forEach((btn) => btn.classList.remove('active'))
 }
+const loadWordDetails = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/word/${id}`
+  const res = await fetch(url)
+  const detail = await res.json()
+  dispalyWordDetails(detail.data)
+  // const detials_container = document.getElementById('detials_container')
+  // document.getElementById('my_modal_5').showModal()
+}
 
+const managesping = (status) => {
+  if (status == true) {
+    document.getElementById('spiner').classList.remove('hidden')
+    document.getElementById('word-container').classList.remove('hidden')
+  } else {
+    document.getElementById('word-container').classList.remove('hidden')
+    document.getElementById('spiner').classList.add('hidden')
+  }
+}
+
+const dispalyWordDetails = (word) => {
+  const detials_container = document.getElementById('detials_container')
+  document.getElementById('my_modal_5').showModal()
+  detials_container.innerHTML = `
+    <h2 class="text-2xl font-bold">
+            ${word.word}(<i class="fa-solid fa-microphone-lines"></i>:${word.pronunciation})
+          </h2>
+          <div class="">
+            <h2 class="text-xl font-medium">Meaning</h2>
+            <p class="text-xl">${word.meaning}</p>
+          </div>
+          <div class="">
+            <h2 class="text-xl font-medium">Example</h2>
+            <p class="text-xl">${word.sentence}</p>
+          </div>
+          <div class="">
+            <h2 class="text-xl font-medium">সমার্থক শব্দ গুলো</h2>
+            
+              ${createArray(word.synonyms)}
+          </div>`
+  console.log(word)
+}
 const dispalyLessonWord = (words) => {
   const wordContainer = document.getElementById('word-container')
   wordContainer.innerHTML = ''
@@ -38,7 +86,7 @@ const dispalyLessonWord = (words) => {
           নেক্সট Lesson এ যান
         </h2>
       </div>`
-
+    managesping(false)
     return
   }
   words.forEach((word) => {
@@ -53,7 +101,7 @@ const dispalyLessonWord = (words) => {
         </p>
         <p class="hind-siliguri font-semibold text-3xl"> ${word.meaning ? word.meaning : 'কোন অর্থ পাওয়া যায় নি'} / ${word.pronunciation ? word.pronunciation : 'কোন উচ্চারণ পাওয়া যায় নি'}</p>
         <div class="flex justify-between items-center">
-          <button class="btn hover:bg-sky-400">
+          <button onclick="loadWordDetails(${word.id})" class="btn hover:bg-sky-400">
             <i class="fa-solid fa-circle-info"></i>
           </button>
           <button class="btn hover:bg-sky-400">
@@ -64,6 +112,7 @@ const dispalyLessonWord = (words) => {
     `
     wordContainer.appendChild(wordDiv)
   })
+  managesping(false)
 }
 const dispalyLesson = (lessons) => {
   const lessonContainer = document.getElementById('level_contianer')

@@ -146,6 +146,9 @@
         class="flex items-center justify-center gap-5 flex-wrap"
       ></div>
     </section>
+    <section id="spiner" class="flex items-center justify-center py-10 hidden">
+      <span class="loading loading-dots loading-xl"></span>
+    </section>
     <!-- Lesson Show -->
     <section
       id="word-container"
@@ -160,6 +163,17 @@
         </h2>
       </div>
     </section>
+    <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+      <div class="modal-box">
+        <div id="detials_container" class="space-y-8"></div>
+        <div class="modal-action">
+          <form method="dialog" class="">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn btn-primary">Complete Learning</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
     <script src="./app.js"></script>
   </body>
 </html>
